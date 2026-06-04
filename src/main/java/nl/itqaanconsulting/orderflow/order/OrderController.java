@@ -18,9 +18,11 @@ import java.util.UUID;
 public class OrderController {
 
     private final OrderService orderService;
+    private final OrderProcessingService orderProcessingService;
 
-    public OrderController(OrderService orderService) {
+    public OrderController(OrderService orderService, OrderProcessingService orderProcessingService) {
         this.orderService = orderService;
+        this.orderProcessingService = orderProcessingService;
     }
 
     @PostMapping
@@ -57,6 +59,12 @@ public class OrderController {
     @PostMapping("/{id}/prepare-shipment")
     public OrderResponse prepareShipment(@PathVariable UUID id) {
         return orderService.prepareShipment(id);
+    }
+
+    @PostMapping("/{id}/process")
+    @ResponseStatus(HttpStatus.ACCEPTED)
+    public OrderProcessingResponse process(@PathVariable UUID id) {
+        return orderProcessingService.requestProcessing(id);
     }
 
     @GetMapping("/{id}/events")

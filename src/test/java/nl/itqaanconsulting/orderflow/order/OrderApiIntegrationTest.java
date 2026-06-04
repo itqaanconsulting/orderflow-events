@@ -10,6 +10,7 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.UUID;
 
+import static org.awaitility.Awaitility.await;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -61,6 +62,28 @@ class OrderApiIntegrationTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.length()").value(5))
                 .andExpect(jsonPath("$[4].type").value("SHIPMENT_PREPARED"));
+    }
+
+    @Test
+    void processesOrderAsynchronouslyWhenRequested() throws Exception {
+        UUID orderId = createOrder("ORD-1005");
+
+        mockMvc.perform(post("/api/orders/{id}/process", orderId))
+                .andExpect(status().isAccepted())
+                .andExpect(jsonPath("$.currentStatus").value("RECEIVED"))
+                .andExpect(jsonPath("$.message").value("Order processing requested."));
+
+        await().untilAsserted(() ->
+                mockMvc.perform(get("/api/orders/{id}", orderId))
+                        .andExpect(status().isOk())
+                        .andExpect(jsonPath("$.status").value("READY_TO_SHIP"))
+        );
+
+        mockMvc.perform(get("/api/orders/{id}/events", orderId))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.length()").value(6))
+                .andExpect(jsonPath("$[1].type").value("ORDER_PROCESSING_REQUESTED"))
+                .andExpect(jsonPath("$[5].type").value("SHIPMENT_PREPARED"));
     }
 
     @Test

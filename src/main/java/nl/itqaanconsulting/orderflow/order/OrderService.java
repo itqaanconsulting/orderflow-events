@@ -61,6 +61,16 @@ public class OrderService {
     }
 
     @Transactional
+    public OrderResponse requestProcessing(UUID id) {
+        CustomerOrder order = getOrder(id);
+        if (order.getStatus() != OrderStatus.RECEIVED) {
+            throw new BusinessRuleException("Order processing can only be requested for RECEIVED orders.");
+        }
+        appendEvent(order, OrderEventType.ORDER_PROCESSING_REQUESTED, "Order processing requested.");
+        return OrderResponse.from(order);
+    }
+
+    @Transactional
     public OrderResponse validate(UUID id) {
         CustomerOrder order = getOrder(id);
         move(order, OrderStatus.RECEIVED, OrderStatus.VALIDATED, OrderEventType.ORDER_VALIDATED, "Order passed validation.");

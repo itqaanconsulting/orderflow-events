@@ -37,6 +37,7 @@ POST /api/orders/{id}/validate
 POST /api/orders/{id}/mark-paid
 POST /api/orders/{id}/reserve-inventory
 POST /api/orders/{id}/prepare-shipment
+POST /api/orders/{id}/process
 GET /api/orders/{id}/events
 ```
 
@@ -48,4 +49,4 @@ mvn test
 
 ## Current scope
 
-This version uses a persisted event log and explicit workflow endpoints. The next step is to introduce a message broker so lifecycle steps are processed by asynchronous consumers instead of direct endpoint calls.
+This version uses a persisted event log, explicit workflow endpoints and an async in-process event handler for `POST /api/orders/{id}/process`. The next step is to replace the in-process event boundary with Kafka or RabbitMQ.
