@@ -41,7 +41,20 @@ springdoc:
     path: /swagger-ui.html
 
 management:
+  info:
+    env:
+      enabled: true
   endpoints:
     web:
       exposure:
         include: health,info
+
+info:
+  app:
+    name: OrderFlow Events
+    version: 0.1.0-SNAPSHOT
+    description: Event-driven order processing showcase with Kafka and PostgreSQL.
+  messaging:
+    mode: ${orderflow.messaging.mode}
+    order-processing-topic: ${orderflow.kafka.order-processing-topic}
+    consumer-group: ${orderflow.kafka.consumer-group}

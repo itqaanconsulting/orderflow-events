@@ -37,6 +37,13 @@ Swagger UI:
 http://localhost:8082/swagger-ui.html
 ```
 
+Actuator:
+
+```text
+http://localhost:8082/actuator/health
+http://localhost:8082/actuator/info
+```
+
 ## API
 
 ```http
