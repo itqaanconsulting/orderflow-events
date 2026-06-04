@@ -1,0 +1,110 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>OrderFlow Events</title>
+    <style>
+        :root {
+            color-scheme: light;
+            font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        }
+
+        body {
+            background: #f6f7f9;
+            color: #15181d;
+            margin: 0;
+        }
+
+        main {
+            margin: 0 auto;
+            max-width: 980px;
+            padding: 3rem 1.5rem;
+        }
+
+        h1 {
+            font-size: clamp(2.4rem, 5vw, 4rem);
+            line-height: 1;
+            margin: 0 0 0.8rem;
+        }
+
+        p {
+            color: #596272;
+            font-size: 1.05rem;
+            line-height: 1.6;
+            margin: 0;
+        }
+
+        .links,
+        .flow {
+            display: grid;
+            gap: 0.85rem;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            margin-top: 2rem;
+        }
+
+        a,
+        article {
+            background: #ffffff;
+            border: 1px solid #d9dee7;
+            border-radius: 8px;
+            box-shadow: 0 10px 26px rgba(21, 24, 29, 0.07);
+            color: inherit;
+            padding: 1rem;
+            text-decoration: none;
+        }
+
+        a strong,
+        article strong {
+            display: block;
+            margin-bottom: 0.35rem;
+        }
+
+        code {
+            color: #0f766e;
+            font-family: ui-monospace, SFMono-Regular, Consolas, "Liberation Mono", monospace;
+            font-size: 0.9rem;
+        }
+    </style>
+</head>
+<body>
+<main>
+    <h1>OrderFlow Events</h1>
+    <p>Event-driven order processing showcase with Spring Boot, Kafka, PostgreSQL, idempotency and a persisted event log.</p>
+
+    <section class="links" aria-label="Project links">
+        <a href="/swagger-ui.html">
+            <strong>Swagger UI</strong>
+            <code>/swagger-ui.html</code>
+        </a>
+        <a href="/actuator/health">
+            <strong>Health</strong>
+            <code>/actuator/health</code>
+        </a>
+        <a href="/actuator/info">
+            <strong>Info</strong>
+            <code>/actuator/info</code>
+        </a>
+    </section>
+
+    <section class="flow" aria-label="Demo flow">
+        <article>
+            <strong>1. Create order</strong>
+            <code>POST /api/orders</code>
+        </article>
+        <article>
+            <strong>2. Request processing</strong>
+            <code>POST /api/orders/{id}/process</code>
+        </article>
+        <article>
+            <strong>3. View event log</strong>
+            <code>GET /api/orders/{id}/events</code>
+        </article>
+        <article>
+            <strong>4. Replay message</strong>
+            <code>POST /api/orders/{id}/process/{messageId}/replay</code>
+        </article>
+    </section>
+</main>
+</body>
+</html>
