@@ -1,4 +1,7 @@
-package nl.itqaanconsulting.orderflow.order;
+package nl.itqaanconsulting.orderflow.order.api;
+
+import nl.itqaanconsulting.orderflow.order.domain.OrderEvent;
+import nl.itqaanconsulting.orderflow.order.domain.OrderEventType;
 
 import java.time.Instant;
 import java.util.UUID;
@@ -10,7 +13,7 @@ public record OrderEventResponse(
         String message,
         Instant createdAt
 ) {
-    static OrderEventResponse from(OrderEvent event) {
+    public static OrderEventResponse from(OrderEvent event) {
         return new OrderEventResponse(
                 event.getId(),
                 event.getOrderId(),

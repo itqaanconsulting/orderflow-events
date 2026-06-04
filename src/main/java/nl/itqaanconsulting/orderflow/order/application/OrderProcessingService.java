@@ -1,5 +1,9 @@
-package nl.itqaanconsulting.orderflow.order;
+package nl.itqaanconsulting.orderflow.order.application;
 
+import nl.itqaanconsulting.orderflow.order.api.OrderProcessingResponse;
+import nl.itqaanconsulting.orderflow.order.api.OrderResponse;
+import nl.itqaanconsulting.orderflow.order.messaging.OrderProcessingPublisher;
+import nl.itqaanconsulting.orderflow.order.messaging.OrderProcessingRequestedEvent;
 import org.springframework.stereotype.Service;
 
 import java.util.UUID;

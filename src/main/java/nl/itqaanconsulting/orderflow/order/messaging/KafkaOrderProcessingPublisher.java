@@ -1,4 +1,4 @@
-package nl.itqaanconsulting.orderflow.order;
+package nl.itqaanconsulting.orderflow.order.messaging;
 
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.kafka.core.KafkaTemplate;

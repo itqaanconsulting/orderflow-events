@@ -1,4 +1,4 @@
-package nl.itqaanconsulting.orderflow.order;
+package nl.itqaanconsulting.orderflow.order.domain;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;

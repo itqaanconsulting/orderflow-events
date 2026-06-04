@@ -1,5 +1,6 @@
-package nl.itqaanconsulting.orderflow.order;
+package nl.itqaanconsulting.orderflow.order.messaging;
 
+import nl.itqaanconsulting.orderflow.order.application.OrderLifecycleProcessor;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Service;

@@ -1,4 +1,4 @@
-package nl.itqaanconsulting.orderflow.order;
+package nl.itqaanconsulting.orderflow.order.messaging;
 
 public interface OrderProcessingPublisher {
 

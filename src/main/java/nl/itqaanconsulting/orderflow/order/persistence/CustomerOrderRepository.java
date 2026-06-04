@@ -1,5 +1,6 @@
-package nl.itqaanconsulting.orderflow.order;
+package nl.itqaanconsulting.orderflow.order.persistence;
 
+import nl.itqaanconsulting.orderflow.order.domain.CustomerOrder;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;

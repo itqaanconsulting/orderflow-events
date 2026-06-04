@@ -1,5 +1,8 @@
-package nl.itqaanconsulting.orderflow.order;
+package nl.itqaanconsulting.orderflow.order.application;
 
+import nl.itqaanconsulting.orderflow.order.api.ProcessedMessageResponse;
+import nl.itqaanconsulting.orderflow.order.domain.ProcessedMessage;
+import nl.itqaanconsulting.orderflow.order.persistence.ProcessedMessageRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 

@@ -1,4 +1,4 @@
-package nl.itqaanconsulting.orderflow.order;
+package nl.itqaanconsulting.orderflow.order.api;
 
 import jakarta.validation.constraints.DecimalMin;
 import jakarta.validation.constraints.Email;

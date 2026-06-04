@@ -1,4 +1,7 @@
-package nl.itqaanconsulting.orderflow.order;
+package nl.itqaanconsulting.orderflow.order.api;
+
+import nl.itqaanconsulting.orderflow.order.domain.CustomerOrder;
+import nl.itqaanconsulting.orderflow.order.domain.OrderStatus;
 
 import java.math.BigDecimal;
 import java.time.Instant;
@@ -14,7 +17,7 @@ public record OrderResponse(
         Instant createdAt,
         Instant updatedAt
 ) {
-    static OrderResponse from(CustomerOrder order) {
+    public static OrderResponse from(CustomerOrder order) {
         return new OrderResponse(
                 order.getId(),
                 order.getExternalReference(),

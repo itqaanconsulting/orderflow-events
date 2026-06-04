@@ -1,4 +1,6 @@
-package nl.itqaanconsulting.orderflow.order;
+package nl.itqaanconsulting.orderflow.order.api;
+
+import nl.itqaanconsulting.orderflow.order.domain.OrderStatus;
 
 import java.util.UUID;
 

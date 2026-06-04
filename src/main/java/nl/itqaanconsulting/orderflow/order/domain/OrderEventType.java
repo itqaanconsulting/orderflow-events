@@ -1,4 +1,4 @@
-package nl.itqaanconsulting.orderflow.order;
+package nl.itqaanconsulting.orderflow.order.domain;
 
 public enum OrderEventType {
     ORDER_RECEIVED,
@@ -6,5 +6,6 @@ public enum OrderEventType {
     ORDER_VALIDATED,
     PAYMENT_CAPTURED,
     INVENTORY_RESERVED,
-    SHIPMENT_PREPARED
+    SHIPMENT_PREPARED,
+    PROCESSING_FAILED
 }

@@ -1,4 +1,6 @@
-package nl.itqaanconsulting.orderflow.order;
+package nl.itqaanconsulting.orderflow.order.api;
+
+import nl.itqaanconsulting.orderflow.order.domain.ProcessedMessage;
 
 import java.time.Instant;
 import java.util.UUID;
@@ -8,7 +10,7 @@ public record ProcessedMessageResponse(
         UUID orderId,
         Instant processedAt
 ) {
-    static ProcessedMessageResponse from(ProcessedMessage message) {
+    public static ProcessedMessageResponse from(ProcessedMessage message) {
         return new ProcessedMessageResponse(message.getMessageId(), message.getOrderId(), message.getProcessedAt());
     }
 }

@@ -53,6 +53,17 @@ GET /api/orders/{id}/events
 GET /api/orders/processed-messages
 ```
 
+## Package structure
+
+```text
+order.api          REST controllers and DTOs
+order.application  use cases and workflow services
+order.domain       entities, enums and domain exceptions
+order.messaging    Kafka producers, consumers and message contracts
+order.persistence  Spring Data repositories
+shared             shared API error handling
+```
+
 ## Demo flow
 
 Create an order:
@@ -76,6 +87,14 @@ POST /api/orders/{id}/process/{messageId}/replay
 ```
 
 The first call processes the order. A second call with the same `messageId` is ignored by the idempotency guard, so the event log does not get duplicate lifecycle events.
+
+Demo a processing failure by creating an order with an external reference that contains `FAIL-INVENTORY`, then call:
+
+```http
+POST /api/orders/{id}/process
+```
+
+The processor stops before inventory reservation, moves the order to `PROCESSING_FAILED`, and records a `PROCESSING_FAILED` event with the reason.
 
 ## Test
 

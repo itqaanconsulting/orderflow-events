@@ -1,5 +1,14 @@
-package nl.itqaanconsulting.orderflow.order;
+package nl.itqaanconsulting.orderflow.order.application;
 
+import nl.itqaanconsulting.orderflow.order.api.CreateOrderRequest;
+import nl.itqaanconsulting.orderflow.order.api.OrderEventResponse;
+import nl.itqaanconsulting.orderflow.order.api.OrderResponse;
+import nl.itqaanconsulting.orderflow.order.domain.CustomerOrder;
+import nl.itqaanconsulting.orderflow.order.domain.OrderEvent;
+import nl.itqaanconsulting.orderflow.order.domain.OrderEventType;
+import nl.itqaanconsulting.orderflow.order.domain.OrderStatus;
+import nl.itqaanconsulting.orderflow.order.persistence.CustomerOrderRepository;
+import nl.itqaanconsulting.orderflow.order.persistence.OrderEventRepository;
 import nl.itqaanconsulting.orderflow.shared.BusinessRuleException;
 import nl.itqaanconsulting.orderflow.shared.DuplicateResourceException;
 import nl.itqaanconsulting.orderflow.shared.ResourceNotFoundException;
@@ -96,6 +105,20 @@ public class OrderService {
         CustomerOrder order = getOrder(id);
         move(order, OrderStatus.INVENTORY_RESERVED, OrderStatus.READY_TO_SHIP, OrderEventType.SHIPMENT_PREPARED, "Shipment prepared.");
         return OrderResponse.from(order);
+    }
+
+    @Transactional
+    public OrderResponse markProcessingFailed(UUID id, String reason) {
+        CustomerOrder order = getOrder(id);
+        order.moveTo(OrderStatus.PROCESSING_FAILED);
+        appendEvent(order, OrderEventType.PROCESSING_FAILED, "Processing failed: " + reason);
+        return OrderResponse.from(order);
+    }
+
+    @Transactional(readOnly = true)
+    public boolean shouldFailInventoryReservation(UUID id) {
+        CustomerOrder order = getOrder(id);
+        return order.getExternalReference().contains("FAIL-INVENTORY");
     }
 
     private CustomerOrder getOrder(UUID id) {

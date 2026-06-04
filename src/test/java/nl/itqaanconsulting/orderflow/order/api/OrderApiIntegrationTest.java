@@ -1,4 +1,4 @@
-package nl.itqaanconsulting.orderflow.order;
+package nl.itqaanconsulting.orderflow.order.api;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -107,6 +107,25 @@ class OrderApiIntegrationTest {
         mockMvc.perform(get("/api/orders/processed-messages"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$[?(@.messageId == '%s')]".formatted(messageId)).exists());
+    }
+
+    @Test
+    void recordsProcessingFailureWhenInventoryReservationFails() throws Exception {
+        UUID orderId = createOrder("ORD-FAIL-INVENTORY-1007");
+
+        mockMvc.perform(post("/api/orders/{id}/process", orderId))
+                .andExpect(status().isAccepted());
+
+        await().untilAsserted(() ->
+                mockMvc.perform(get("/api/orders/{id}", orderId))
+                        .andExpect(status().isOk())
+                        .andExpect(jsonPath("$.status").value("PROCESSING_FAILED"))
+        );
+
+        mockMvc.perform(get("/api/orders/{id}/events", orderId))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$[4].type").value("PROCESSING_FAILED"))
+                .andExpect(jsonPath("$[4].message").value("Processing failed: Inventory reservation failed for demo scenario."));
     }
 
     @Test

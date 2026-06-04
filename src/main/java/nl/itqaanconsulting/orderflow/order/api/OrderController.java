@@ -1,6 +1,11 @@
-package nl.itqaanconsulting.orderflow.order;
+package nl.itqaanconsulting.orderflow.order.api;
 
 import jakarta.validation.Valid;
+import nl.itqaanconsulting.orderflow.order.application.OrderLifecycleProcessor;
+import nl.itqaanconsulting.orderflow.order.application.OrderProcessingService;
+import nl.itqaanconsulting.orderflow.order.application.OrderService;
+import nl.itqaanconsulting.orderflow.order.application.ProcessedMessageService;
+import nl.itqaanconsulting.orderflow.order.messaging.OrderProcessingRequestedEvent;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
