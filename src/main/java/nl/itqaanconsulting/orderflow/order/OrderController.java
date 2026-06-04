@@ -19,10 +19,19 @@ public class OrderController {
 
     private final OrderService orderService;
     private final OrderProcessingService orderProcessingService;
+    private final OrderLifecycleProcessor orderLifecycleProcessor;
+    private final ProcessedMessageService processedMessageService;
 
-    public OrderController(OrderService orderService, OrderProcessingService orderProcessingService) {
+    public OrderController(
+            OrderService orderService,
+            OrderProcessingService orderProcessingService,
+            OrderLifecycleProcessor orderLifecycleProcessor,
+            ProcessedMessageService processedMessageService
+    ) {
         this.orderService = orderService;
         this.orderProcessingService = orderProcessingService;
+        this.orderLifecycleProcessor = orderLifecycleProcessor;
+        this.processedMessageService = processedMessageService;
     }
 
     @PostMapping
@@ -67,8 +76,20 @@ public class OrderController {
         return orderProcessingService.requestProcessing(id);
     }
 
+    @PostMapping("/{id}/process/{messageId}/replay")
+    @ResponseStatus(HttpStatus.ACCEPTED)
+    public OrderProcessingResponse replayProcessingMessage(@PathVariable UUID id, @PathVariable UUID messageId) {
+        orderLifecycleProcessor.process(new OrderProcessingRequestedEvent(messageId, id));
+        return new OrderProcessingResponse(messageId, id, orderService.findById(id).status(), "Processing message replayed.");
+    }
+
     @GetMapping("/{id}/events")
     public List<OrderEventResponse> findEvents(@PathVariable UUID id) {
         return orderService.findEvents(id);
+    }
+
+    @GetMapping("/processed-messages")
+    public List<ProcessedMessageResponse> findProcessedMessages() {
+        return processedMessageService.findAll();
     }
 }

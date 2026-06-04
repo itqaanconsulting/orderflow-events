@@ -10,6 +10,7 @@ The project models an order lifecycle where the API accepts work, Kafka decouple
 - Order lifecycle modeling
 - Event log per aggregate
 - Kafka-backed async order processing
+- Idempotent consumer handling for duplicate Kafka messages
 - PostgreSQL schema migrations with Flyway
 - Request validation and API error handling
 - Integration tests with H2
@@ -47,7 +48,9 @@ POST /api/orders/{id}/mark-paid
 POST /api/orders/{id}/reserve-inventory
 POST /api/orders/{id}/prepare-shipment
 POST /api/orders/{id}/process
+POST /api/orders/{id}/process/{messageId}/replay
 GET /api/orders/{id}/events
+GET /api/orders/processed-messages
 ```
 
 ## Demo flow
@@ -64,7 +67,15 @@ Request async processing:
 POST /api/orders/{id}/process
 ```
 
-The endpoint returns `202 Accepted`. The Kafka consumer then moves the order to `READY_TO_SHIP` and records the lifecycle events.
+The endpoint returns `202 Accepted` with a `messageId`. The Kafka consumer then moves the order to `READY_TO_SHIP` and records the lifecycle events.
+
+Replay the same processing message:
+
+```http
+POST /api/orders/{id}/process/{messageId}/replay
+```
+
+The first call processes the order. A second call with the same `messageId` is ignored by the idempotency guard, so the event log does not get duplicate lifecycle events.
 
 ## Test
 
@@ -74,4 +85,4 @@ mvn test
 
 ## Current scope
 
-This version uses a persisted event log, explicit workflow endpoints and Kafka-backed async processing for `POST /api/orders/{id}/process`. Tests use an in-memory publisher so the suite stays fast and does not require Docker.
+This version uses a persisted event log, explicit workflow endpoints, Kafka-backed async processing for `POST /api/orders/{id}/process`, and a `processed_messages` table to prevent duplicate message handling. Tests use an in-memory publisher so the suite stays fast and does not require Docker.

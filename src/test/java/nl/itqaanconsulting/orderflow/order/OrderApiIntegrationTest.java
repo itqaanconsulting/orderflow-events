@@ -70,6 +70,7 @@ class OrderApiIntegrationTest {
 
         mockMvc.perform(post("/api/orders/{id}/process", orderId))
                 .andExpect(status().isAccepted())
+                .andExpect(jsonPath("$.messageId").isNotEmpty())
                 .andExpect(jsonPath("$.currentStatus").value("RECEIVED"))
                 .andExpect(jsonPath("$.message").value("Order processing requested."));
 
@@ -84,6 +85,28 @@ class OrderApiIntegrationTest {
                 .andExpect(jsonPath("$.length()").value(6))
                 .andExpect(jsonPath("$[1].type").value("ORDER_PROCESSING_REQUESTED"))
                 .andExpect(jsonPath("$[5].type").value("SHIPMENT_PREPARED"));
+    }
+
+    @Test
+    void ignoresDuplicateProcessingMessage() throws Exception {
+        UUID orderId = createOrder("ORD-1006");
+        UUID messageId = UUID.randomUUID();
+
+        mockMvc.perform(post("/api/orders/{id}/process/{messageId}/replay", orderId, messageId))
+                .andExpect(status().isAccepted())
+                .andExpect(jsonPath("$.message").value("Processing message replayed."));
+
+        mockMvc.perform(post("/api/orders/{id}/process/{messageId}/replay", orderId, messageId))
+                .andExpect(status().isAccepted())
+                .andExpect(jsonPath("$.currentStatus").value("READY_TO_SHIP"));
+
+        mockMvc.perform(get("/api/orders/{id}/events", orderId))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.length()").value(5));
+
+        mockMvc.perform(get("/api/orders/processed-messages"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$[?(@.messageId == '%s')]".formatted(messageId)).exists());
     }
 
     @Test

@@ -17,8 +17,9 @@ public class OrderProcessingService {
 
     public OrderProcessingResponse requestProcessing(UUID orderId) {
         OrderResponse order = orderService.requestProcessing(orderId);
-        publisher.publish(new OrderProcessingRequestedEvent(orderId));
-        return new OrderProcessingResponse(order.id(), order.status(), "Order processing requested.");
+        OrderProcessingRequestedEvent event = new OrderProcessingRequestedEvent(orderId);
+        publisher.publish(event);
+        return new OrderProcessingResponse(event.messageId(), order.id(), order.status(), "Order processing requested.");
     }
 
 }
