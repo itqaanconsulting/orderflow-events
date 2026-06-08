@@ -15,6 +15,7 @@ The project models an order lifecycle where the API accepts work, Kafka decouple
 - PostgreSQL schema migrations with Flyway
 - Request validation and API error handling
 - Integration tests with H2
+- Interactive browser demo for the complete workflow
 - OpenAPI documentation
 
 ## Run locally
@@ -25,6 +26,14 @@ mvn spring-boot:run
 ```
 
 Docker starts PostgreSQL on `localhost:5433` and Kafka on `localhost:9092`.
+
+Interactive demo:
+
+```text
+http://localhost:8082/
+```
+
+The demo can create and process a successful order, replay the same message to demonstrate idempotency, and trigger a retry/dead-letter scenario. The selected order and its persisted event timeline update automatically.
 
 The application publishes order processing requests to this topic:
 

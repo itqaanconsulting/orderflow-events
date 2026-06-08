@@ -8,107 +8,1006 @@
         :root {
             color-scheme: light;
             font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+            --ink: #17201e;
+            --muted: #65706d;
+            --line: #d8dfdc;
+            --surface: #ffffff;
+            --background: #f4f7f5;
+            --accent: #087f6b;
+            --accent-dark: #076555;
+            --accent-soft: #e4f3ef;
+            --danger: #b42318;
+            --danger-soft: #fef0ee;
+            --warning: #986a09;
+            --warning-soft: #fff7df;
+        }
+
+        * {
+            box-sizing: border-box;
         }
 
         body {
-            background: #f6f7f9;
-            color: #15181d;
+            background: var(--background);
+            color: var(--ink);
             margin: 0;
+        }
+
+        button,
+        input,
+        select {
+            font: inherit;
+        }
+
+        button,
+        a {
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .topbar {
+            align-items: center;
+            background: var(--surface);
+            border-bottom: 1px solid var(--line);
+            display: flex;
+            justify-content: space-between;
+            min-height: 68px;
+            padding: 0 2rem;
+        }
+
+        .brand {
+            align-items: center;
+            display: flex;
+            gap: 0.75rem;
+        }
+
+        .brand-mark {
+            align-items: center;
+            background: var(--accent);
+            border-radius: 6px;
+            color: white;
+            display: inline-flex;
+            font-size: 0.75rem;
+            font-weight: 800;
+            height: 34px;
+            justify-content: center;
+            width: 34px;
+        }
+
+        .brand strong,
+        .brand span {
+            display: block;
+        }
+
+        .brand span {
+            color: var(--muted);
+            font-size: 0.76rem;
+            margin-top: 1px;
+        }
+
+        .toplinks {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .toplinks a {
+            color: var(--muted);
+            font-size: 0.86rem;
+            font-weight: 650;
+            text-decoration: none;
+        }
+
+        .toplinks a:hover {
+            color: var(--accent);
         }
 
         main {
             margin: 0 auto;
-            max-width: 980px;
-            padding: 3rem 1.5rem;
+            max-width: 1440px;
+            padding: 1.5rem 2rem 3rem;
+        }
+
+        .intro {
+            align-items: end;
+            display: flex;
+            gap: 2rem;
+            justify-content: space-between;
+            margin-bottom: 1.4rem;
         }
 
         h1 {
-            font-size: clamp(2.4rem, 5vw, 4rem);
-            line-height: 1;
-            margin: 0 0 0.8rem;
+            font-size: 1.85rem;
+            margin: 0 0 0.35rem;
         }
 
-        p {
-            color: #596272;
-            font-size: 1.05rem;
-            line-height: 1.6;
+        .intro p {
+            color: var(--muted);
+            line-height: 1.5;
+            margin: 0;
+            max-width: 700px;
+        }
+
+        .health {
+            align-items: center;
+            color: var(--muted);
+            display: flex;
+            flex: 0 0 auto;
+            font-size: 0.82rem;
+            gap: 0.45rem;
+        }
+
+        .health-dot {
+            background: #9aa5a1;
+            border-radius: 50%;
+            height: 9px;
+            width: 9px;
+        }
+
+        .health-dot.up {
+            background: #16836d;
+            box-shadow: 0 0 0 4px var(--accent-soft);
+        }
+
+        .workspace {
+            display: grid;
+            gap: 1rem;
+            grid-template-columns: minmax(290px, 0.8fr) minmax(520px, 1.55fr) minmax(290px, 0.9fr);
+        }
+
+        .panel {
+            background: var(--surface);
+            border: 1px solid var(--line);
+            border-radius: 8px;
+            min-width: 0;
+        }
+
+        .panel-header {
+            align-items: center;
+            border-bottom: 1px solid var(--line);
+            display: flex;
+            justify-content: space-between;
+            min-height: 54px;
+            padding: 0.85rem 1rem;
+        }
+
+        .panel-header h2 {
+            font-size: 0.95rem;
             margin: 0;
         }
 
-        .links,
-        .flow {
-            display: grid;
-            gap: 0.85rem;
-            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-            margin-top: 2rem;
+        .count {
+            background: #edf1ef;
+            border-radius: 999px;
+            color: var(--muted);
+            font-size: 0.72rem;
+            font-weight: 700;
+            padding: 0.18rem 0.48rem;
         }
 
-        a,
-        article {
-            background: #ffffff;
-            border: 1px solid #d9dee7;
-            border-radius: 8px;
-            box-shadow: 0 10px 26px rgba(21, 24, 29, 0.07);
-            color: inherit;
+        .panel-body {
             padding: 1rem;
-            text-decoration: none;
         }
 
-        a strong,
-        article strong {
+        .field {
+            margin-bottom: 0.8rem;
+        }
+
+        label {
+            color: #45504d;
             display: block;
+            font-size: 0.76rem;
+            font-weight: 700;
             margin-bottom: 0.35rem;
         }
 
-        code {
-            color: #0f766e;
-            font-family: ui-monospace, SFMono-Regular, Consolas, "Liberation Mono", monospace;
-            font-size: 0.9rem;
+        input,
+        select {
+            background: white;
+            border: 1px solid #cbd4d0;
+            border-radius: 6px;
+            color: var(--ink);
+            min-height: 39px;
+            outline: none;
+            padding: 0.55rem 0.65rem;
+            width: 100%;
+        }
+
+        input:focus,
+        select:focus {
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px var(--accent-soft);
+        }
+
+        .field-row {
+            display: grid;
+            gap: 0.65rem;
+            grid-template-columns: 1.4fr 0.6fr;
+        }
+
+        .actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.55rem;
+        }
+
+        button {
+            align-items: center;
+            border: 1px solid transparent;
+            border-radius: 6px;
+            cursor: pointer;
+            display: inline-flex;
+            font-size: 0.82rem;
+            font-weight: 700;
+            justify-content: center;
+            min-height: 38px;
+            padding: 0.55rem 0.8rem;
+        }
+
+        button:disabled {
+            cursor: wait;
+            opacity: 0.55;
+        }
+
+        .primary {
+            background: var(--accent);
+            color: white;
+        }
+
+        .primary:hover:not(:disabled) {
+            background: var(--accent-dark);
+        }
+
+        .secondary {
+            background: white;
+            border-color: #cbd4d0;
+            color: #34413d;
+        }
+
+        .secondary:hover:not(:disabled) {
+            background: #f2f5f3;
+        }
+
+        .danger-button {
+            background: white;
+            border-color: #efc7c2;
+            color: var(--danger);
+        }
+
+        .form-message,
+        .action-message {
+            border-radius: 6px;
+            display: none;
+            font-size: 0.79rem;
+            line-height: 1.45;
+            margin-top: 0.75rem;
+            padding: 0.65rem 0.75rem;
+        }
+
+        .form-message.visible,
+        .action-message.visible {
+            display: block;
+        }
+
+        .success {
+            background: var(--accent-soft);
+            color: var(--accent-dark);
+        }
+
+        .error {
+            background: var(--danger-soft);
+            color: var(--danger);
+        }
+
+        .orders {
+            border-top: 1px solid var(--line);
+            margin-top: 1rem;
+            max-height: 390px;
+            overflow: auto;
+        }
+
+        .order-row {
+            background: transparent;
+            border: 0;
+            border-bottom: 1px solid #e8ecea;
+            border-radius: 0;
+            display: block;
+            min-height: 0;
+            padding: 0.75rem 1rem;
+            text-align: left;
+            width: 100%;
+        }
+
+        .order-row:hover,
+        .order-row.selected {
+            background: #f1f7f4;
+        }
+
+        .order-row.selected {
+            box-shadow: inset 3px 0 0 var(--accent);
+        }
+
+        .order-main {
+            align-items: center;
+            display: flex;
+            gap: 0.5rem;
+            justify-content: space-between;
+        }
+
+        .order-reference {
+            font-size: 0.82rem;
+            font-weight: 750;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .order-meta {
+            color: var(--muted);
+            font-size: 0.73rem;
+            margin-top: 0.25rem;
+        }
+
+        .badge {
+            border-radius: 999px;
+            display: inline-block;
+            flex: 0 0 auto;
+            font-size: 0.65rem;
+            font-weight: 800;
+            padding: 0.2rem 0.48rem;
+        }
+
+        .badge.active {
+            background: var(--accent-soft);
+            color: var(--accent-dark);
+        }
+
+        .badge.failed {
+            background: var(--danger-soft);
+            color: var(--danger);
+        }
+
+        .badge.pending {
+            background: var(--warning-soft);
+            color: var(--warning);
+        }
+
+        .empty {
+            color: var(--muted);
+            font-size: 0.84rem;
+            line-height: 1.5;
+            padding: 2rem 1rem;
+            text-align: center;
+        }
+
+        .selected-order {
+            align-items: start;
+            display: flex;
+            gap: 1rem;
+            justify-content: space-between;
+        }
+
+        .selected-order h3 {
+            font-size: 1.15rem;
+            margin: 0 0 0.3rem;
+        }
+
+        .selected-order p {
+            color: var(--muted);
+            font-size: 0.8rem;
+            margin: 0;
+        }
+
+        .amount {
+            font-size: 1.05rem;
+            font-weight: 800;
+            text-align: right;
+        }
+
+        .flow {
+            display: grid;
+            gap: 0.45rem;
+            grid-template-columns: repeat(5, 1fr);
+            margin: 1.35rem 0;
+        }
+
+        .step {
+            border-top: 3px solid #dce2df;
+            color: #8a9490;
+            font-size: 0.65rem;
+            font-weight: 750;
+            padding-top: 0.45rem;
+        }
+
+        .step.done {
+            border-color: var(--accent);
+            color: var(--accent-dark);
+        }
+
+        .step.failed {
+            border-color: var(--danger);
+            color: var(--danger);
+        }
+
+        .message-id {
+            background: #f1f4f2;
+            border-radius: 6px;
+            color: #56615d;
+            display: none;
+            font-family: ui-monospace, SFMono-Regular, Consolas, monospace;
+            font-size: 0.7rem;
+            margin-top: 0.8rem;
+            overflow-wrap: anywhere;
+            padding: 0.55rem 0.65rem;
+        }
+
+        .message-id.visible {
+            display: block;
+        }
+
+        .architecture {
+            background: #f7faf8;
+            border: 1px solid var(--line);
+            border-radius: 7px;
+            display: grid;
+            gap: 0.45rem;
+            grid-template-columns: 1fr auto 1fr auto 1fr;
+            margin-top: 1rem;
+            padding: 0.75rem;
+        }
+
+        .architecture div {
+            color: #46514d;
+            font-size: 0.7rem;
+            font-weight: 750;
+            text-align: center;
+        }
+
+        .architecture span {
+            color: var(--accent);
+            font-size: 0.8rem;
+        }
+
+        .timeline {
+            max-height: 550px;
+            overflow: auto;
+            padding: 0 1rem;
+        }
+
+        .event {
+            border-left: 2px solid #cbd5d1;
+            padding: 0.9rem 0 0.9rem 1rem;
+            position: relative;
+        }
+
+        .event::before {
+            background: white;
+            border: 2px solid var(--accent);
+            border-radius: 50%;
+            content: "";
+            height: 8px;
+            left: -6px;
+            position: absolute;
+            top: 1.12rem;
+            width: 8px;
+        }
+
+        .event.failed::before {
+            border-color: var(--danger);
+        }
+
+        .event strong {
+            display: block;
+            font-size: 0.76rem;
+            margin-bottom: 0.25rem;
+        }
+
+        .event p {
+            color: var(--muted);
+            font-size: 0.75rem;
+            line-height: 1.4;
+            margin: 0;
+        }
+
+        .event time {
+            color: #929c98;
+            display: block;
+            font-size: 0.67rem;
+            margin-top: 0.35rem;
+        }
+
+        @media (max-width: 1080px) {
+            .workspace {
+                grid-template-columns: minmax(280px, 0.85fr) minmax(480px, 1.4fr);
+            }
+
+            .events-panel {
+                grid-column: 1 / -1;
+            }
+
+            .timeline {
+                display: grid;
+                gap: 0 1rem;
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 760px) {
+            .topbar {
+                padding: 0 1rem;
+            }
+
+            .toplinks a:not(:first-child) {
+                display: none;
+            }
+
+            main {
+                padding: 1.2rem 1rem 2rem;
+            }
+
+            .intro {
+                align-items: start;
+                flex-direction: column;
+                gap: 0.8rem;
+            }
+
+            .workspace {
+                grid-template-columns: 1fr;
+            }
+
+            .events-panel {
+                grid-column: auto;
+            }
+
+            .timeline {
+                display: block;
+            }
+
+            .flow {
+                grid-template-columns: repeat(3, 1fr);
+            }
+
+            .architecture {
+                grid-template-columns: 1fr;
+            }
+
+            .architecture span {
+                transform: rotate(90deg);
+            }
         }
     </style>
 </head>
 <body>
-<main>
-    <h1>OrderFlow Events</h1>
-    <p>Event-driven order processing showcase with Spring Boot, Kafka, PostgreSQL, idempotency and a persisted event log.</p>
+<header class="topbar">
+    <div class="brand">
+        <span class="brand-mark">OF</span>
+        <div>
+            <strong>OrderFlow Events</strong>
+            <span>Event-driven processing demo</span>
+        </div>
+    </div>
+    <nav class="toplinks" aria-label="Project links">
+        <a href="/swagger-ui.html">API docs</a>
+        <a href="/actuator/health">Health</a>
+        <a href="https://github.com/itqaanconsulting/orderflow-events">GitHub</a>
+    </nav>
+</header>
 
-    <section class="links" aria-label="Project links">
-        <a href="/swagger-ui.html">
-            <strong>Swagger UI</strong>
-            <code>/swagger-ui.html</code>
-        </a>
-        <a href="/actuator/health">
-            <strong>Health</strong>
-            <code>/actuator/health</code>
-        </a>
-        <a href="/actuator/info">
-            <strong>Info</strong>
-            <code>/actuator/info</code>
-        </a>
+<main>
+    <section class="intro">
+        <div>
+            <h1>Order processing workspace</h1>
+            <p>Create an order and send it through Kafka. Follow each persisted domain event and test retry, dead-letter handling and idempotent message replay.</p>
+        </div>
+        <div class="health">
+            <span class="health-dot" id="healthDot"></span>
+            <span id="healthText">Checking service</span>
+        </div>
     </section>
 
-    <section class="flow" aria-label="Demo flow">
-        <article>
-            <strong>1. Create order</strong>
-            <code>POST /api/orders</code>
-        </article>
-        <article>
-            <strong>2. Request processing</strong>
-            <code>POST /api/orders/{id}/process</code>
-        </article>
-        <article>
-            <strong>3. View event log</strong>
-            <code>GET /api/orders/{id}/events</code>
-        </article>
-        <article>
-            <strong>4. Replay message</strong>
-            <code>POST /api/orders/{id}/process/{messageId}/replay</code>
-        </article>
-        <article>
-            <strong>5. Inspect failures</strong>
-            <code>order-processing-requests-dlt</code>
-        </article>
+    <section class="workspace">
+        <aside class="panel">
+            <div class="panel-header">
+                <h2>Create order</h2>
+            </div>
+            <div class="panel-body">
+                <form id="orderForm">
+                    <div class="field">
+                        <label for="externalReference">External reference</label>
+                        <input id="externalReference" name="externalReference" maxlength="80" required>
+                    </div>
+                    <div class="field">
+                        <label for="customerEmail">Customer email</label>
+                        <input id="customerEmail" name="customerEmail" type="email" value="customer@example.com" required>
+                    </div>
+                    <div class="field-row">
+                        <div class="field">
+                            <label for="totalAmount">Amount</label>
+                            <input id="totalAmount" name="totalAmount" type="number" min="0.01" step="0.01" value="149.95" required>
+                        </div>
+                        <div class="field">
+                            <label for="currency">Currency</label>
+                            <select id="currency" name="currency">
+                                <option>EUR</option>
+                                <option>USD</option>
+                                <option>GBP</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="actions">
+                        <button class="primary" id="createButton" type="submit">Create order</button>
+                        <button class="danger-button" id="failureButton" type="button">Create failure demo</button>
+                    </div>
+                    <div class="form-message" id="formMessage" role="status"></div>
+                </form>
+            </div>
+
+            <div class="panel-header">
+                <h2>Orders</h2>
+                <span class="count" id="orderCount">0</span>
+            </div>
+            <div class="orders" id="orderList">
+                <div class="empty">No orders available.</div>
+            </div>
+        </aside>
+
+        <section class="panel">
+            <div class="panel-header">
+                <h2>Selected order</h2>
+                <span class="badge pending" id="selectedStatus">NO ORDER</span>
+            </div>
+            <div class="panel-body" id="detailPanel">
+                <div class="empty" id="detailEmpty">Create or select an order to start the demo.</div>
+                <div id="detailContent" hidden>
+                    <div class="selected-order">
+                        <div>
+                            <h3 id="detailReference"></h3>
+                            <p id="detailCustomer"></p>
+                        </div>
+                        <div class="amount" id="detailAmount"></div>
+                    </div>
+
+                    <div class="flow" aria-label="Order lifecycle">
+                        <div class="step" data-status="RECEIVED">Received</div>
+                        <div class="step" data-status="VALIDATED">Validated</div>
+                        <div class="step" data-status="PAID">Paid</div>
+                        <div class="step" data-status="INVENTORY_RESERVED">Inventory</div>
+                        <div class="step" data-status="READY_TO_SHIP">Shipment</div>
+                    </div>
+
+                    <div class="actions">
+                        <button class="primary" id="processButton" type="button">Process via Kafka</button>
+                        <button class="secondary" id="replayButton" type="button" disabled>Replay message</button>
+                        <button class="secondary" id="refreshButton" type="button">Refresh</button>
+                    </div>
+                    <div class="message-id" id="messageId"></div>
+                    <div class="action-message" id="actionMessage" role="status"></div>
+
+                    <div class="architecture" aria-label="Processing architecture">
+                        <div>REST API</div>
+                        <span>&rarr;</span>
+                        <div>Kafka topic</div>
+                        <span>&rarr;</span>
+                        <div>Idempotent consumer</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <aside class="panel events-panel">
+            <div class="panel-header">
+                <h2>Persisted event timeline</h2>
+                <span class="count" id="eventCount">0</span>
+            </div>
+            <div class="timeline" id="eventTimeline">
+                <div class="empty">Select an order to inspect its events.</div>
+            </div>
+        </aside>
     </section>
 </main>
+
+<script>
+    const state = {
+        orders: [],
+        selectedOrderId: null,
+        messageIds: new Map(),
+        polling: false
+    };
+
+    const elements = {
+        actionMessage: document.querySelector("#actionMessage"),
+        createButton: document.querySelector("#createButton"),
+        detailAmount: document.querySelector("#detailAmount"),
+        detailContent: document.querySelector("#detailContent"),
+        detailCustomer: document.querySelector("#detailCustomer"),
+        detailEmpty: document.querySelector("#detailEmpty"),
+        detailReference: document.querySelector("#detailReference"),
+        eventCount: document.querySelector("#eventCount"),
+        eventTimeline: document.querySelector("#eventTimeline"),
+        externalReference: document.querySelector("#externalReference"),
+        failureButton: document.querySelector("#failureButton"),
+        form: document.querySelector("#orderForm"),
+        formMessage: document.querySelector("#formMessage"),
+        healthDot: document.querySelector("#healthDot"),
+        healthText: document.querySelector("#healthText"),
+        messageId: document.querySelector("#messageId"),
+        orderCount: document.querySelector("#orderCount"),
+        orderList: document.querySelector("#orderList"),
+        processButton: document.querySelector("#processButton"),
+        refreshButton: document.querySelector("#refreshButton"),
+        replayButton: document.querySelector("#replayButton"),
+        selectedStatus: document.querySelector("#selectedStatus")
+    };
+
+    const statusOrder = ["RECEIVED", "VALIDATED", "PAID", "INVENTORY_RESERVED", "READY_TO_SHIP"];
+
+    async function request(path, options = {}) {
+        const response = await fetch(path, {
+            headers: {"Content-Type": "application/json", ...options.headers},
+            ...options
+        });
+
+        if (!response.ok) {
+            const error = await response.json().catch(() => ({message: `Request failed with status ${response.status}.`}));
+            const validation = error.validationErrors ? Object.values(error.validationErrors).join(" ") : "";
+            throw new Error(validation || error.message || "Request failed.");
+        }
+
+        return response.status === 204 ? null : response.json();
+    }
+
+    function createReference(failure = false) {
+        const timestamp = new Date().toISOString().replace(/\D/g, "").slice(0, 14);
+        return failure ? `ORD-FAIL-INVENTORY-${timestamp}` : `ORD-${timestamp}`;
+    }
+
+    function showMessage(element, message, type) {
+        element.textContent = message;
+        element.className = `${element === elements.formMessage ? "form-message" : "action-message"} visible ${type}`;
+    }
+
+    function clearMessage(element) {
+        element.textContent = "";
+        element.classList.remove("visible", "success", "error");
+    }
+
+    function badgeClass(status) {
+        if (status === "PROCESSING_FAILED") return "failed";
+        if (status === "READY_TO_SHIP") return "active";
+        return "pending";
+    }
+
+    function formatStatus(status) {
+        return status.replaceAll("_", " ");
+    }
+
+    function formatDate(value) {
+        return new Intl.DateTimeFormat("en-GB", {
+            dateStyle: "medium",
+            timeStyle: "medium"
+        }).format(new Date(value));
+    }
+
+    function renderOrders() {
+        elements.orderCount.textContent = state.orders.length;
+
+        if (!state.orders.length) {
+            elements.orderList.innerHTML = '<div class="empty">No orders available.</div>';
+            return;
+        }
+
+        elements.orderList.replaceChildren(...state.orders.map(order => {
+            const button = document.createElement("button");
+            button.className = `order-row${order.id === state.selectedOrderId ? " selected" : ""}`;
+            button.type = "button";
+            button.innerHTML = `
+                <div class="order-main">
+                    <span class="order-reference">${escapeHtml(order.externalReference)}</span>
+                    <span class="badge ${badgeClass(order.status)}">${formatStatus(order.status)}</span>
+                </div>
+                <div class="order-meta">${escapeHtml(order.customerEmail)} &middot; ${order.currency} ${Number(order.totalAmount).toFixed(2)}</div>
+            `;
+            button.addEventListener("click", () => selectOrder(order.id));
+            return button;
+        }));
+    }
+
+    function renderDetail(order) {
+        elements.detailEmpty.hidden = true;
+        elements.detailContent.hidden = false;
+        elements.detailReference.textContent = order.externalReference;
+        elements.detailCustomer.textContent = `${order.customerEmail} · created ${formatDate(order.createdAt)}`;
+        elements.detailAmount.textContent = new Intl.NumberFormat("en-GB", {
+            style: "currency",
+            currency: order.currency
+        }).format(order.totalAmount);
+        elements.selectedStatus.textContent = formatStatus(order.status);
+        elements.selectedStatus.className = `badge ${badgeClass(order.status)}`;
+
+        const reachedIndex = order.status === "PROCESSING_FAILED" ? 2 : statusOrder.indexOf(order.status);
+        document.querySelectorAll(".step").forEach((step, index) => {
+            step.classList.toggle("done", reachedIndex >= index);
+            step.classList.toggle("failed", order.status === "PROCESSING_FAILED" && index === 3);
+        });
+
+        const messageId = state.messageIds.get(order.id);
+        elements.messageId.classList.toggle("visible", Boolean(messageId));
+        elements.messageId.textContent = messageId ? `Kafka message: ${messageId}` : "";
+        elements.replayButton.disabled = !messageId;
+        elements.processButton.disabled = state.polling || order.status !== "RECEIVED";
+    }
+
+    function renderEvents(events) {
+        elements.eventCount.textContent = events.length;
+
+        if (!events.length) {
+            elements.eventTimeline.innerHTML = '<div class="empty">No events recorded.</div>';
+            return;
+        }
+
+        elements.eventTimeline.replaceChildren(...events.map(event => {
+            const item = document.createElement("article");
+            item.className = `event${event.type === "PROCESSING_FAILED" ? " failed" : ""}`;
+            item.innerHTML = `
+                <strong>${formatStatus(event.type)}</strong>
+                <p>${escapeHtml(event.message)}</p>
+                <time>${formatDate(event.createdAt)}</time>
+            `;
+            return item;
+        }));
+    }
+
+    function escapeHtml(value) {
+        const element = document.createElement("span");
+        element.textContent = value;
+        return element.innerHTML;
+    }
+
+    async function loadOrders(preferredOrderId = state.selectedOrderId) {
+        state.orders = await request("/api/orders");
+        state.orders.sort((left, right) => new Date(right.createdAt) - new Date(left.createdAt));
+
+        if (preferredOrderId && state.orders.some(order => order.id === preferredOrderId)) {
+            state.selectedOrderId = preferredOrderId;
+        } else if (!state.selectedOrderId && state.orders.length) {
+            state.selectedOrderId = state.orders[0].id;
+        }
+
+        renderOrders();
+        if (state.selectedOrderId) {
+            await loadSelectedOrder();
+        }
+    }
+
+    async function loadSelectedOrder() {
+        const [order, events] = await Promise.all([
+            request(`/api/orders/${state.selectedOrderId}`),
+            request(`/api/orders/${state.selectedOrderId}/events`)
+        ]);
+        const index = state.orders.findIndex(item => item.id === order.id);
+        if (index >= 0) state.orders[index] = order;
+        renderOrders();
+        renderDetail(order);
+        renderEvents(events);
+        return order;
+    }
+
+    async function selectOrder(orderId) {
+        state.selectedOrderId = orderId;
+        clearMessage(elements.actionMessage);
+        renderOrders();
+        await loadSelectedOrder();
+    }
+
+    async function createOrder(failure = false) {
+        clearMessage(elements.formMessage);
+        clearMessage(elements.actionMessage);
+        elements.createButton.disabled = true;
+        elements.failureButton.disabled = true;
+
+        if (failure) elements.externalReference.value = createReference(true);
+
+        const formData = new FormData(elements.form);
+        const payload = {
+            externalReference: formData.get("externalReference"),
+            customerEmail: formData.get("customerEmail"),
+            totalAmount: Number(formData.get("totalAmount")),
+            currency: formData.get("currency")
+        };
+
+        try {
+            const order = await request("/api/orders", {
+                method: "POST",
+                body: JSON.stringify(payload)
+            });
+            state.selectedOrderId = order.id;
+            showMessage(elements.formMessage, `${order.externalReference} was created.`, "success");
+            elements.externalReference.value = createReference();
+            await loadOrders(order.id);
+        } catch (error) {
+            showMessage(elements.formMessage, error.message, "error");
+        } finally {
+            elements.createButton.disabled = false;
+            elements.failureButton.disabled = false;
+        }
+    }
+
+    async function processOrder() {
+        clearMessage(elements.actionMessage);
+        elements.processButton.disabled = true;
+
+        try {
+            const response = await request(`/api/orders/${state.selectedOrderId}/process`, {method: "POST"});
+            state.messageIds.set(state.selectedOrderId, response.messageId);
+            showMessage(elements.actionMessage, "Message accepted by Kafka. Waiting for the consumer...", "success");
+            await pollForCompletion(response.currentStatus);
+        } catch (error) {
+            showMessage(elements.actionMessage, error.message, "error");
+            elements.processButton.disabled = false;
+        }
+    }
+
+    async function pollForCompletion(initialStatus) {
+        state.polling = true;
+        let status = initialStatus;
+
+        for (let attempt = 0; attempt < 24; attempt++) {
+            await new Promise(resolve => setTimeout(resolve, 500));
+            const order = await loadSelectedOrder();
+            status = order.status;
+
+            if (status === "READY_TO_SHIP" || status === "PROCESSING_FAILED") break;
+        }
+
+        state.polling = false;
+        const order = await loadSelectedOrder();
+        if (order.status === "READY_TO_SHIP") {
+            showMessage(elements.actionMessage, "Order completed. The full event chain was persisted.", "success");
+        } else if (order.status === "PROCESSING_FAILED") {
+            showMessage(elements.actionMessage, "Processing failed after retries. The message was sent to the dead-letter topic.", "error");
+        } else {
+            showMessage(elements.actionMessage, "Processing is taking longer than expected. Use Refresh to check again.", "error");
+        }
+    }
+
+    async function replayMessage() {
+        const messageId = state.messageIds.get(state.selectedOrderId);
+        if (!messageId) return;
+
+        clearMessage(elements.actionMessage);
+        elements.replayButton.disabled = true;
+
+        try {
+            await request(`/api/orders/${state.selectedOrderId}/process/${messageId}/replay`, {method: "POST"});
+            await loadSelectedOrder();
+            showMessage(elements.actionMessage, "The same message was replayed and ignored by the idempotency guard.", "success");
+        } catch (error) {
+            showMessage(elements.actionMessage, error.message, "error");
+        } finally {
+            elements.replayButton.disabled = false;
+        }
+    }
+
+    async function checkHealth() {
+        try {
+            const health = await request("/actuator/health");
+            elements.healthDot.classList.toggle("up", health.status === "UP");
+            elements.healthText.textContent = health.status === "UP" ? "Service healthy" : `Service ${health.status.toLowerCase()}`;
+        } catch {
+            elements.healthText.textContent = "Health unavailable";
+        }
+    }
+
+    elements.form.addEventListener("submit", event => {
+        event.preventDefault();
+        createOrder(false);
+    });
+    elements.failureButton.addEventListener("click", () => createOrder(true));
+    elements.processButton.addEventListener("click", processOrder);
+    elements.replayButton.addEventListener("click", replayMessage);
+    elements.refreshButton.addEventListener("click", loadSelectedOrder);
+
+    elements.externalReference.value = createReference();
+    Promise.all([checkHealth(), loadOrders()]).catch(error => {
+        showMessage(elements.formMessage, `Could not load the demo: ${error.message}`, "error");
+    });
+</script>
 </body>
 </html>
