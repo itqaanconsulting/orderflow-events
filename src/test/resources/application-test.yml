@@ -14,3 +14,6 @@ spring:
 orderflow:
   messaging:
     mode: in-memory
+  kafka:
+    retry-interval-ms: 0
+    max-retries: 2

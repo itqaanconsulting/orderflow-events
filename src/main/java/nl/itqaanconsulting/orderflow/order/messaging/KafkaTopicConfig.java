@@ -19,4 +19,13 @@ public class KafkaTopicConfig {
                 .replicas(1)
                 .build();
     }
+
+    @Bean
+    @ConditionalOnProperty(name = "orderflow.messaging.mode", havingValue = "kafka", matchIfMissing = true)
+    NewTopic orderProcessingDeadLetterTopic(OrderKafkaProperties properties) {
+        return TopicBuilder.name(properties.getDeadLetterTopic())
+                .partitions(3)
+                .replicas(1)
+                .build();
+    }
 }

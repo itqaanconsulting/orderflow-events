@@ -11,6 +11,7 @@ The project models an order lifecycle where the API accepts work, Kafka decouple
 - Event log per aggregate
 - Kafka-backed async order processing
 - Idempotent consumer handling for duplicate Kafka messages
+- Kafka retry with dead-letter topic recovery
 - PostgreSQL schema migrations with Flyway
 - Request validation and API error handling
 - Integration tests with H2
@@ -29,6 +30,12 @@ The application publishes order processing requests to this topic:
 
 ```text
 order-processing-requests
+```
+
+Messages that still fail after three processing attempts are sent to:
+
+```text
+order-processing-requests-dlt
 ```
 
 Swagger UI:
@@ -101,7 +108,13 @@ Demo a processing failure by creating an order with an external reference that c
 POST /api/orders/{id}/process
 ```
 
-The processor stops before inventory reservation, moves the order to `PROCESSING_FAILED`, and records a `PROCESSING_FAILED` event with the reason.
+The consumer retries the message twice after the first attempt. When processing still fails, it moves the order to `PROCESSING_FAILED`, records a `PROCESSING_FAILED` event, and publishes the message to `order-processing-requests-dlt`.
+
+Inspect dead-letter messages from the Kafka container:
+
+```powershell
+docker exec orderflow-kafka kafka-console-consumer.sh --bootstrap-server localhost:9092 --topic order-processing-requests-dlt --from-beginning
+```
 
 ## Test
 

@@ -25,7 +25,7 @@ spring:
       key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
       value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
       properties:
-        spring.json.trusted.packages: nl.itqaanconsulting.orderflow.order
+        spring.json.trusted.packages: nl.itqaanconsulting.orderflow.order.messaging
     listener:
       missing-topics-fatal: false
 
@@ -34,7 +34,10 @@ orderflow:
     mode: kafka
   kafka:
     order-processing-topic: order-processing-requests
+    dead-letter-topic: order-processing-requests-dlt
     consumer-group: orderflow-events
+    retry-interval-ms: 1000
+    max-retries: 2
 
 springdoc:
   swagger-ui:
@@ -57,4 +60,5 @@ info:
   messaging:
     mode: ${orderflow.messaging.mode}
     order-processing-topic: ${orderflow.kafka.order-processing-topic}
+    dead-letter-topic: ${orderflow.kafka.dead-letter-topic}
     consumer-group: ${orderflow.kafka.consumer-group}

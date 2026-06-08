@@ -1,6 +1,7 @@
 package nl.itqaanconsulting.orderflow.order.application;
 
 import nl.itqaanconsulting.orderflow.order.domain.OrderProcessingException;
+import nl.itqaanconsulting.orderflow.order.domain.OrderStatus;
 import nl.itqaanconsulting.orderflow.order.messaging.OrderProcessingRequestedEvent;
 import org.springframework.stereotype.Service;
 
@@ -16,19 +17,27 @@ public class OrderLifecycleProcessor {
     }
 
     public void process(OrderProcessingRequestedEvent event) {
-        if (!processedMessageService.claim(event.messageId(), event.orderId())) {
+        if (processedMessageService.isProcessed(event.messageId())) {
             return;
         }
-        try {
-            orderService.validate(event.orderId());
-            orderService.markPaid(event.orderId());
+
+        OrderStatus status = orderService.findById(event.orderId()).status();
+        if (status == OrderStatus.RECEIVED) {
+            status = orderService.validate(event.orderId()).status();
+        }
+        if (status == OrderStatus.VALIDATED) {
+            status = orderService.markPaid(event.orderId()).status();
+        }
+        if (status == OrderStatus.PAID) {
             if (orderService.shouldFailInventoryReservation(event.orderId())) {
                 throw new OrderProcessingException("Inventory reservation failed for demo scenario.");
             }
-            orderService.reserveInventory(event.orderId());
-            orderService.prepareShipment(event.orderId());
-        } catch (RuntimeException exception) {
-            orderService.markProcessingFailed(event.orderId(), exception.getMessage());
+            status = orderService.reserveInventory(event.orderId()).status();
         }
+        if (status == OrderStatus.INVENTORY_RESERVED) {
+            orderService.prepareShipment(event.orderId());
+        }
+
+        processedMessageService.markProcessed(event.messageId(), event.orderId());
     }
 }

@@ -18,13 +18,14 @@ public class ProcessedMessageService {
         this.repository = repository;
     }
 
+    @Transactional(readOnly = true)
+    public boolean isProcessed(UUID messageId) {
+        return repository.existsById(messageId);
+    }
+
     @Transactional
-    public boolean claim(UUID messageId, UUID orderId) {
-        if (repository.existsById(messageId)) {
-            return false;
-        }
+    public void markProcessed(UUID messageId, UUID orderId) {
         repository.save(new ProcessedMessage(messageId, orderId));
-        return true;
     }
 
     @Transactional(readOnly = true)
