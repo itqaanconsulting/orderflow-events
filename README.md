@@ -118,9 +118,19 @@ docker exec orderflow-kafka kafka-console-consumer.sh --bootstrap-server localho
 
 ## Test
 
+Fast integration tests without Docker:
+
 ```powershell
 mvn test
 ```
+
+End-to-end Kafka integration tests with Testcontainers:
+
+```powershell
+mvn -Pkafka-it verify
+```
+
+The Kafka profile starts a real broker container and verifies both successful order processing and delivery to the dead-letter topic.
 
 ## Current scope
 

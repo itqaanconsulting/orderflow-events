@@ -1,0 +1,19 @@
+spring:
+  datasource:
+    url: jdbc:h2:mem:orderflow-kafka-it;MODE=PostgreSQL;DATABASE_TO_LOWER=TRUE
+    driver-class-name: org.h2.Driver
+    username: sa
+    password:
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    open-in-view: false
+  flyway:
+    enabled: true
+
+orderflow:
+  messaging:
+    mode: kafka
+  kafka:
+    retry-interval-ms: 100
+    max-retries: 2

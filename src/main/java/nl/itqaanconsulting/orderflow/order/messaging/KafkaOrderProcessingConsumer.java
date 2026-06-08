@@ -16,8 +16,8 @@ public class KafkaOrderProcessingConsumer {
     }
 
     @KafkaListener(
-            topics = "#{@orderKafkaProperties.orderProcessingTopic}",
-            groupId = "#{@orderKafkaProperties.consumerGroup}"
+            topics = "${orderflow.kafka.order-processing-topic}",
+            groupId = "${orderflow.kafka.consumer-group}"
     )
     public void consume(OrderProcessingRequestedEvent event) {
         orderLifecycleProcessor.process(event);
