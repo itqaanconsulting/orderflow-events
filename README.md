@@ -2,148 +2,157 @@
 
 [![CI](https://github.com/itqaanconsulting/orderflow-events/actions/workflows/ci.yml/badge.svg)](https://github.com/itqaanconsulting/orderflow-events/actions/workflows/ci.yml)
 
-Event-driven order processing showcase built with Java 21, Spring Boot, Kafka and PostgreSQL.
+Event-driven order processing showcase built with Java 21, Spring Boot, Apache Kafka and PostgreSQL.
 
-The project models an order lifecycle where the API accepts work, Kafka decouples processing, and a persisted event log records every workflow step.
+The REST API accepts orders and publishes processing requests to Kafka. An idempotent consumer executes the order lifecycle, persists every domain event and sends messages that keep failing to a dead-letter topic.
 
-## What it demonstrates
+![OrderFlow Events demo](docs/images/orderflow-demo.png)
 
-- Spring Boot REST API
-- Order lifecycle modeling
-- Event log per aggregate
-- Kafka-backed async order processing
-- Idempotent consumer handling for duplicate Kafka messages
-- Kafka retry with dead-letter topic recovery
-- PostgreSQL schema migrations with Flyway
-- Request validation and API error handling
-- Integration tests with H2
-- GitHub Actions CI with real Kafka Testcontainers tests
-- Interactive browser demo for the complete workflow
-- OpenAPI documentation
+## Highlights
 
-## Run locally
+- Asynchronous order processing with Apache Kafka
+- Explicit order lifecycle and persisted event timeline
+- Idempotent message handling based on a unique message ID
+- Configurable retry handling and dead-letter topic recovery
+- PostgreSQL persistence and versioned Flyway migrations
+- REST validation, business rules and consistent API errors
+- Interactive browser demo and OpenAPI documentation
+- Fast H2 integration tests and real Kafka tests with Testcontainers
+- GitHub Actions CI on Java 21
+
+## Architecture
+
+```mermaid
+flowchart LR
+    UI["Browser demo"] --> API["Spring Boot REST API"]
+    API --> DB[("PostgreSQL")]
+    API --> TOPIC["order-processing-requests"]
+    TOPIC --> CONSUMER["Idempotent Kafka consumer"]
+    CONSUMER --> DB
+    CONSUMER -->|retry exhausted| DLT["order-processing-requests-dlt"]
+```
+
+The API responds with `202 Accepted` and a message ID when processing is requested. Kafka decouples the request from the lifecycle execution. The consumer checks the `processed_messages` table before handling a message, preventing duplicate lifecycle events when Kafka redelivers a record.
+
+## Run Locally
+
+Requirements:
+
+- Java 21
+- Maven 3.9+
+- Docker Desktop
+
+Start PostgreSQL and Kafka:
 
 ```powershell
 docker compose up -d
+```
+
+Start the application:
+
+```powershell
 mvn spring-boot:run
 ```
 
-Docker starts PostgreSQL on `localhost:5433` and Kafka on `localhost:9092`.
+Open:
 
-Interactive demo:
+- Demo: [http://localhost:8082](http://localhost:8082)
+- Swagger UI: [http://localhost:8082/swagger-ui.html](http://localhost:8082/swagger-ui.html)
+- Health: [http://localhost:8082/actuator/health](http://localhost:8082/actuator/health)
+
+PostgreSQL is exposed on `localhost:5433` and Kafka on `localhost:9092`.
+
+## Five-Minute Demo
+
+1. Click **Create order** and select the new order.
+2. Click **Process via Kafka**.
+3. Show that the API returns immediately while the order progresses asynchronously to `READY_TO_SHIP`.
+4. Walk through the persisted event timeline.
+5. Click **Replay message** and show that the event count does not increase.
+6. Click **Create failure demo**, then **Process via Kafka**.
+7. Show the retries, `PROCESSING_FAILED` status and dead-letter result.
+
+The demo covers the successful flow, observability through domain events, idempotency and failure recovery without requiring manual API calls.
+
+## Processing Flows
+
+### Successful processing
 
 ```text
-http://localhost:8082/
+RECEIVED
+  -> VALIDATED
+  -> PAID
+  -> INVENTORY_RESERVED
+  -> READY_TO_SHIP
 ```
 
-The demo can create and process a successful order, replay the same message to demonstrate idempotency, and trigger a retry/dead-letter scenario. The selected order and its persisted event timeline update automatically.
+### Failed processing
 
-The application publishes order processing requests to this topic:
+An order reference containing `FAIL-INVENTORY` triggers the demo failure. The consumer performs the initial attempt plus two retries. It then:
 
-```text
-order-processing-requests
-```
+1. Sets the order status to `PROCESSING_FAILED`.
+2. Persists a `PROCESSING_FAILED` domain event.
+3. Publishes the original message to `order-processing-requests-dlt`.
 
-Messages that still fail after three processing attempts are sent to:
+Inspect the dead-letter topic:
 
-```text
-order-processing-requests-dlt
-```
-
-Swagger UI:
-
-```text
-http://localhost:8082/swagger-ui.html
-```
-
-Actuator:
-
-```text
-http://localhost:8082/actuator/health
-http://localhost:8082/actuator/info
+```powershell
+docker exec orderflow-kafka /opt/kafka/bin/kafka-console-consumer.sh `
+  --bootstrap-server localhost:9092 `
+  --topic order-processing-requests-dlt `
+  --from-beginning
 ```
 
 ## API
 
 ```http
 POST /api/orders
-GET /api/orders
-GET /api/orders/{id}
+GET  /api/orders
+GET  /api/orders/{id}
 POST /api/orders/{id}/validate
 POST /api/orders/{id}/mark-paid
 POST /api/orders/{id}/reserve-inventory
 POST /api/orders/{id}/prepare-shipment
 POST /api/orders/{id}/process
 POST /api/orders/{id}/process/{messageId}/replay
-GET /api/orders/{id}/events
-GET /api/orders/processed-messages
+GET  /api/orders/{id}/events
+GET  /api/orders/processed-messages
 ```
 
-## Package structure
+## Package Structure
 
 ```text
 order.api          REST controllers and DTOs
 order.application  use cases and workflow services
-order.domain       entities, enums and domain exceptions
-order.messaging    Kafka producers, consumers and message contracts
+order.domain       entities, statuses and domain exceptions
+order.messaging    Kafka configuration, producers and consumers
 order.persistence  Spring Data repositories
 shared             shared API error handling
 ```
 
-## Demo flow
+## Tests
 
-Create an order:
-
-```http
-POST /api/orders
-```
-
-Request async processing:
-
-```http
-POST /api/orders/{id}/process
-```
-
-The endpoint returns `202 Accepted` with a `messageId`. The Kafka consumer then moves the order to `READY_TO_SHIP` and records the lifecycle events.
-
-Replay the same processing message:
-
-```http
-POST /api/orders/{id}/process/{messageId}/replay
-```
-
-The first call processes the order. A second call with the same `messageId` is ignored by the idempotency guard, so the event log does not get duplicate lifecycle events.
-
-Demo a processing failure by creating an order with an external reference that contains `FAIL-INVENTORY`, then call:
-
-```http
-POST /api/orders/{id}/process
-```
-
-The consumer retries the message twice after the first attempt. When processing still fails, it moves the order to `PROCESSING_FAILED`, records a `PROCESSING_FAILED` event, and publishes the message to `order-processing-requests-dlt`.
-
-Inspect dead-letter messages from the Kafka container:
-
-```powershell
-docker exec orderflow-kafka kafka-console-consumer.sh --bootstrap-server localhost:9092 --topic order-processing-requests-dlt --from-beginning
-```
-
-## Test
-
-Fast integration tests without Docker:
+Run the fast integration suite without Docker:
 
 ```powershell
 mvn test
 ```
 
-End-to-end Kafka integration tests with Testcontainers:
+Run the complete suite with a real Kafka broker managed by Testcontainers:
 
 ```powershell
 mvn -Pkafka-it verify
 ```
 
-The Kafka profile starts a real broker container and verifies both successful order processing and delivery to the dead-letter topic.
+The complete suite verifies:
 
-## Current scope
+- Order creation and lifecycle business rules
+- Asynchronous processing
+- Duplicate-message protection
+- Failure status and event persistence
+- Delivery to the real Kafka dead-letter topic
+- Availability of the interactive demo
 
-This version uses a persisted event log, explicit workflow endpoints, Kafka-backed async processing for `POST /api/orders/{id}/process`, and a `processed_messages` table to prevent duplicate message handling. Tests use an in-memory publisher so the suite stays fast and does not require Docker.
+## Scope
+
+This repository is intentionally focused on event-driven processing rather than a complete commerce platform. Authentication, product management, payment-provider integration and deployment infrastructure are outside the current scope.
