@@ -1,5 +1,7 @@
 # OrderFlow Events
 
+[![CI](https://github.com/itqaanconsulting/orderflow-events/actions/workflows/ci.yml/badge.svg)](https://github.com/itqaanconsulting/orderflow-events/actions/workflows/ci.yml)
+
 Event-driven order processing showcase built with Java 21, Spring Boot, Kafka and PostgreSQL.
 
 The project models an order lifecycle where the API accepts work, Kafka decouples processing, and a persisted event log records every workflow step.
@@ -15,6 +17,7 @@ The project models an order lifecycle where the API accepts work, Kafka decouple
 - PostgreSQL schema migrations with Flyway
 - Request validation and API error handling
 - Integration tests with H2
+- GitHub Actions CI with real Kafka Testcontainers tests
 - Interactive browser demo for the complete workflow
 - OpenAPI documentation
 
