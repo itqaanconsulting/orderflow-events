@@ -32,6 +32,8 @@ spring:
 orderflow:
   messaging:
     mode: kafka
+  outbox:
+    publish-interval-ms: 500
   kafka:
     order-processing-topic: order-processing-requests
     dead-letter-topic: order-processing-requests-dlt

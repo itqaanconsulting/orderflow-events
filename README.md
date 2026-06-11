@@ -13,6 +13,7 @@ The REST API accepts orders and publishes processing requests to Kafka. An idemp
 - Asynchronous order processing with Apache Kafka
 - Explicit order lifecycle and persisted event timeline
 - Idempotent message handling based on a unique message ID
+- Transactional outbox for reliable database-to-Kafka publication
 - Configurable retry handling and dead-letter topic recovery
 - PostgreSQL persistence and versioned Flyway migrations
 - REST validation, business rules and consistent API errors
@@ -32,7 +33,7 @@ flowchart LR
     CONSUMER -->|retry exhausted| DLT["order-processing-requests-dlt"]
 ```
 
-The API responds with `202 Accepted` and a message ID when processing is requested. Kafka decouples the request from the lifecycle execution. The consumer checks the `processed_messages` table before handling a message, preventing duplicate lifecycle events when Kafka redelivers a record.
+The API responds with `202 Accepted` and a message ID when processing is requested. The order status and outbox entry are committed in one database transaction. A scheduled publisher forwards pending outbox records to Kafka and marks them as published only after broker acknowledgement. The consumer checks the `processed_messages` table before handling a message, preventing duplicate lifecycle events when Kafka redelivers a record.
 
 ## Run Locally
 
@@ -117,6 +118,7 @@ POST /api/orders/{id}/process
 POST /api/orders/{id}/process/{messageId}/replay
 GET  /api/orders/{id}/events
 GET  /api/orders/processed-messages
+GET  /api/orders/outbox
 ```
 
 ## Package Structure
