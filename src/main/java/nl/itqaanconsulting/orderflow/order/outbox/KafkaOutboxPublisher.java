@@ -3,6 +3,7 @@ package nl.itqaanconsulting.orderflow.order.outbox;
 import nl.itqaanconsulting.orderflow.order.messaging.OrderKafkaProperties;
 import nl.itqaanconsulting.orderflow.order.messaging.OrderProcessingRequestedEvent;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
@@ -17,12 +18,15 @@ public class KafkaOutboxPublisher {
     private final OrderProcessingOutboxRepository repository;
     private final KafkaTemplate<String, OrderProcessingRequestedEvent> kafkaTemplate;
     private final OrderKafkaProperties properties;
+    private final int maxAttempts;
 
     public KafkaOutboxPublisher(
             OrderProcessingOutboxRepository repository,
             KafkaTemplate<String, OrderProcessingRequestedEvent> kafkaTemplate,
-            OrderKafkaProperties properties
+            OrderKafkaProperties properties,
+            @Value("${orderflow.outbox.max-attempts:10}") int maxAttempts
     ) {
+        this.maxAttempts = maxAttempts;
         this.repository = repository;
         this.kafkaTemplate = kafkaTemplate;
         this.properties = properties;
@@ -44,7 +48,7 @@ public class KafkaOutboxPublisher {
                         .get(5, TimeUnit.SECONDS);
                 entry.markPublished();
             } catch (Exception exception) {
-                entry.recordFailure(exception);
+                entry.recordFailure(exception, maxAttempts);
             }
         }
     }

@@ -33,7 +33,7 @@ flowchart LR
     CONSUMER -->|retry exhausted| DLT["order-processing-requests-dlt"]
 ```
 
-The API responds with `202 Accepted` and a message ID when processing is requested. The order status and outbox entry are committed in one database transaction. A scheduled publisher forwards pending outbox records to Kafka and marks them as published only after broker acknowledgement. The consumer checks the `processed_messages` table before handling a message, preventing duplicate lifecycle events when Kafka redelivers a record.
+The API responds with `202 Accepted` and a message ID when processing is requested. The order status and outbox entry are committed in one database transaction. A scheduled publisher forwards pending outbox records to Kafka and marks them as published only after broker acknowledgement. The publisher claims a batch with `SELECT ... FOR UPDATE SKIP LOCKED`, so several application instances can run side by side without publishing a record twice. A record that still fails after `orderflow.outbox.max-attempts` (default 10) is marked `FAILED` and visible via `GET /api/orders/outbox`, instead of being retried forever. The consumer checks the `processed_messages` table before handling a message, preventing duplicate lifecycle events when Kafka redelivers a record.
 
 ## Run Locally
 
