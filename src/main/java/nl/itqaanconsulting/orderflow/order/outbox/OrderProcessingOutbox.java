@@ -54,9 +54,12 @@ public class OrderProcessingOutbox {
         lastError = null;
     }
 
-    public void recordFailure(Throwable exception) {
+    public void recordFailure(Throwable exception, int maxAttempts) {
         attempts++;
         lastError = exception.getMessage();
+        if (attempts >= maxAttempts) {
+            status = OutboxStatus.FAILED;
+        }
     }
 
     public UUID getMessageId() {
