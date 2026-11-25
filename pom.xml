@@ -21,8 +21,10 @@
         <java.version>21</java.version>
         <springdoc.version>2.6.0</springdoc.version>
         <testcontainers.version>2.0.5</testcontainers.version>
-        <!-- commons-compress 1.28 (via Testcontainers 2.x) needs commons-lang3 3.18+; Spring Boot 3.3 manages 3.14 -->
+        <!-- commons-compress 1.28 (via Testcontainers 2.x) needs these versions; Spring Boot 3.3 resolves older ones -->
         <commons-lang3.version>3.18.0</commons-lang3.version>
+        <commons-codec.version>1.19.0</commons-codec.version>
+        <commons-io.version>2.20.0</commons-io.version>
     </properties>
 
     <dependencies>
@@ -93,6 +95,16 @@
             <scope>test</scope>
         </dependency>
     </dependencies>
+
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>commons-io</groupId>
+                <artifactId>commons-io</artifactId>
+                <version>${commons-io.version}</version>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
 
     <build>
         <plugins>
