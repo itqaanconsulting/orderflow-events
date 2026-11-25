@@ -1,14 +1,14 @@
 package nl.itqaanconsulting.orderflow.order.messaging;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import tools.jackson.databind.JsonNode;
+import tools.jackson.databind.ObjectMapper;
 import org.apache.kafka.clients.consumer.Consumer;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.common.serialization.StringDeserializer;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.kafka.core.DefaultKafkaConsumerFactory;
@@ -100,7 +100,7 @@ class KafkaOrderProcessingIT {
 
             assertThat(record.key()).isEqualTo(orderId.toString());
             assertThat(record.value()).contains(orderId.toString());
-            assertThat(record.value()).contains(processingResponse.get("messageId").asText());
+            assertThat(record.value()).contains(processingResponse.get("messageId").asString());
         }
     }
 
@@ -121,7 +121,7 @@ class KafkaOrderProcessingIT {
                         .getResponse()
                         .getContentAsString()
         );
-        return UUID.fromString(response.get("id").asText());
+        return UUID.fromString(response.get("id").asString());
     }
 
     private Consumer<String, String> deadLetterConsumer() {
