@@ -28,7 +28,7 @@
         <springdoc.version>3.2.1</springdoc.version>
         <testcontainers.version>2.0.5</testcontainers.version>
         <!-- commons-compress 1.28 (via Testcontainers 2.x) needs commons-io 2.20+, which Spring Boot does not manage. -->
-        <commons-io.version>2.20.0</commons-io.version>
+        <commons-io.version>2.22.0</commons-io.version>
     </properties>
 
     <dependencies>
